@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="col-6 border mt-3 text-center">
+        <h1>Voiture N° {{ auto.id }}</h1>
+        <h2>Marque: {{auto.marque}}</h2>
+        <p>Modèle: {{auto.modele}}</p>
+        <p>Prix: {{auto.prix}}</p>
+        <p>Pays {{auto.pays}}</p>
+        
+    </div>
+{% endblock %}

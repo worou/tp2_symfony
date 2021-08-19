@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="col-6 border">
+        <h1>Article N° {{ post.id }}</h1>
+        <h2>Titre: {{post.title}}</h2>
+        <p>{{post.excerpt}}</p>
+        <p>Reference: {{post.slug}}</p>
+        <p class="text-end">Paru le: {{post.createdAt}}</p>
+    </div>
+{% endblock %}

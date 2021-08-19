@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Auto{% endblock %}
+
+{% block body %}
+
+<div class="example-wrapper">
+    <h1>Liste des voitures</h1>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Marque</th>
+                <th>Modele</th>
+                <th>Puissance</th>
+                <th>Prix</th>
+                <th>Image</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for auto in autos %}
+            <tr>
+                <td>{{auto.id}}</td>
+                <td>{{auto.marque}}</td>
+                <td>{{auto.modele}}</td>
+                <td>{{auto.puissance}} ch</td>
+                <td>{{auto.prix | format_currency('EUR')}}</td>
+                <td><img src="{{ asset('' ~ auto.image)}}" alt="" /></td>
+                <td>
+                    <a href="{{path('auto_item',{id:auto.id})}}" class="btn btn-info"><i class="fas fa-pen"></i>Détail</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

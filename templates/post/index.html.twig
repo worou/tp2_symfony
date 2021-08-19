@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Articles!{% endblock %}
+
+{% block body %}
+
+<div class="example-wrapper">
+    <h1>Liste des articles</h1>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Identitifiant</th>
+                <th>Titre</th>
+                <th>Description</th>
+                <th>Créé le</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for post in posts %}
+            <tr>
+                <td>{{post.id}}</td>
+                <td>{{post.slug}}</td>
+                <td>{{post.title}}</td>
+                <td>{{post.excerpt}}</td>
+                <td>{{post.createdAt}}</td>
+                <td>
+                    <a href="{{path('post_item',{id:post.id})}}" class="btn btn-info"><i class="fas fa-pen"></i>Détail</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
