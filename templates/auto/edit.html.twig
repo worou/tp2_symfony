@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+{% form_theme form_edit 'bootstrap_5_layout.html.twig' %}
+{% block body %}
+    <div class="col-4 offset-4">
+        <h1>Formulaire d'édidition</h1>
+        {# {{ form(form_edit) }} #}
+        {{ form_start(form_edit) }}
+            {# {{ form_widget(form_edit) }} #}
+            <div class="row">
+             <div class="col-6">
+                    {{ form_label(form_edit.marque)}}
+                    {{ form_widget(form_edit.marque) }}
+                    {{ form_errors(form_edit.marque) }}
+             </div>
+             <div class="col-6">
+                    {{ form_label(form_edit.modele)}}
+                    {{ form_widget(form_edit.modele) }}
+                    {{ form_errors(form_edit.modele) }}
+             </div>
+            </div>
+            {{ form_row(form_edit.puissance,{'label':'Puissance de la voiture', 'attr':{'placeholder':'Modifier la puissance', 'class':'p2'}}) }}
+
+            {{ form_rest(form_edit) }}
+            <button class="btn btn-warning col-12">Modifier</button>
+        {{ form_end(form_edit) }}
+    </div>
+{%  endblock %}

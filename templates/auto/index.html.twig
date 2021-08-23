@@ -4,7 +4,7 @@
 
 {% block body %}
 
-<div class="example-wrapper">
+
     <h1>Liste des voitures</h1>
     <table class="table table-striped">
         <thead>
@@ -28,11 +28,16 @@
                 <td>{{auto.prix | format_currency('EUR')}}</td>
                 <td><img src="{{ asset('' ~ auto.image)}}" alt="" /></td>
                 <td>
-                    <a href="{{path('auto_item',{id:auto.id})}}" class="btn btn-info"><i class="fas fa-pen"></i>Détail</a>
+                    <a href="{{path('auto_item',{id:auto.id})}}" class="btn btn-info"><i class="fas fa-pen"></i> Détail</a>
+                    <a onclick="return confirm('Etes-vous sûr de supprimer')" 
+                        href="{{ path('auto_delete', {id: auto.id})}}" class="btn btn-danger">
+                        <i class="fas fa-trash"> Delete</i>
+                    </a>
                 </td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
-</div>
+    <div class="d-flex justify-content-center">{{ knp_pagination_render(autos) }}</div>
+
 {% endblock %}

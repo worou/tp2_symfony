@@ -1,0 +1,8 @@
+{% extends 'base.html.twig' %}
+{% form_theme form_car 'bootstrap_5_layout.html.twig' %}
+{% block body %}
+    <div class="col-4 offset-4">
+        <h1>Formulaire d'ajout</h1>
+        {{ form(form_car) }}
+    </div>
+{%  endblock %}
