@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Auto;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -17,7 +18,7 @@ class AutoType extends AbstractType
             ->add('puissance')
             ->add('prix')
             ->add('pays')
-            ->add('image')
+            ->add('image', FileType::class, ['data_class'=>null, 'required'=>false])
         ;
     }
 

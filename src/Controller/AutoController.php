@@ -11,13 +11,15 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Form\Extension\Core\Type\UrlType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\Extension\Core\Type\IntegerType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\UrlType;
+use Symfony\Component\Filesystem\Filesystem;
 
 class AutoController extends AbstractController
 {
@@ -114,7 +116,7 @@ class AutoController extends AbstractController
                           ->add('puissance',IntegerType::class,[
                             'label'=>'Puissance de la voiture',
                             'attr'=>['placeholder'=>'Entrez la puissance svp...']])
-                          ->add('image', UrlType::class,[
+                          ->add('image', FileType::class,[
                             'label'=>'Url de l\'image',
                             'attr'=>['placeholder'=>'Entrez l\'url svp...']])
                           ->add('pays',TextType::class,[
@@ -125,6 +127,15 @@ class AutoController extends AbstractController
         $form_auto->handleRequest($request);
         if($form_auto->isSubmitted() && $form_auto->isValid()){
             //dd($auto);
+            $file = $form_auto->get('image')->getData();
+            
+            $fileName = time().'.'.$file->guessExtension();
+            
+            $file->move(
+                $this->getParameter('images_directory'),
+                $fileName
+            );
+            $auto->setImage($fileName);
             $em->persist($auto);
             $em->flush();
             return $this->redirectToRoute("auto");
@@ -136,7 +147,7 @@ class AutoController extends AbstractController
     }
 
     /**
-     * @Route("/auto/edit/{id}")
+     * @Route("/auto/edit/{id}", name="auto_edit")
      */
     public function update(int $id, Request $request): Response
     {
@@ -151,6 +162,22 @@ class AutoController extends AbstractController
         }
         $form_edit->handleRequest($request);
         if($form_edit->isSubmitted() && $form_edit->isValid()){
+            $fileSystem = new Filesystem();
+            $file = $form_edit->get('image')->getData();
+            $fileName = "";
+            if($file){
+                $fileName = time().'.'.$file->guessExtension();
+                $file->move(
+                    $this->getParameter('images_directory'),
+                    $fileName
+                );
+                if(file_exists('images/'.$auto->getImage())){
+
+                    $fileSystem->remove('images/'.$auto->getImage());
+                }
+                $auto->setImage($fileName);
+            }
+            
             $em->flush();
             return $this->redirectToRoute('auto_item', [
                 'id' => $auto->getId()
@@ -158,24 +185,31 @@ class AutoController extends AbstractController
 
         }
        
-        return $this->render('auto/edit.html.twig',['form_edit'=>$form_edit->createView()]);
+        return $this->render('auto/edit.html.twig',['form_edit'=>$form_edit->createView(), 'auto'=>$auto]);
     }
 
-    /**
-     * @Route("/delete/{id}", name="auto_delete")
-     */
-    public function deleteAuto($id){
-        $em = $this->getDoctrine()->getManager();
-        $auto = $em->getRepository(Auto::class)->find($id);
+    // /**
+    //  * @Route("/delete/{id}", name="auto_delete")
+    //  */
+    // public function deleteAuto($id){
 
-        if(!$auto){
-            throw $this->createNotFoundException(
-                'Aucune voiture ne correspond à votre demande'
-            );
-        }
-        $em->remove($auto);
-        $em->flush();
+    //     $fileSystem = new Filesystem();
 
-        return $this->redirectToRoute("auto");  
-      }
+    //     $em = $this->getDoctrine()->getManager();
+    //     $auto = $em->getRepository(Auto::class)->find($id);
+
+    //     if(!$auto){
+    //         throw $this->createNotFoundException(
+    //             'Aucune voiture ne correspond à votre demande'
+    //         );
+    //     }
+    //     if(file_exists('images/'.$auto->getImage())){
+
+    //         $fileSystem->remove('images/'.$auto->getImage());
+    //     }
+    //     $em->remove($auto);
+    //     $em->flush();
+
+    //     return $this->redirectToRoute("auto");  
+    //   }
 }

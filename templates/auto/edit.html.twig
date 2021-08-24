@@ -18,8 +18,11 @@
                     {{ form_errors(form_edit.modele) }}
              </div>
             </div>
-            {{ form_row(form_edit.puissance,{'label':'Puissance de la voiture', 'attr':{'placeholder':'Modifier la puissance', 'class':'p2'}}) }}
-
+            {{ form_row(form_edit.puissance,{'label':'Puissance de la voiture', 
+            'attr':{'placeholder':'Modifier la puissance', 'class':'p2'}}) }}
+            {{ form_row(form_edit.prix) }}
+            {{ form_row(form_edit.image) }}
+            <img src="{{ asset('images/' ~ auto.image ) }}" class="img-thumbnail" width="100" alt="" />
             {{ form_rest(form_edit) }}
             <button class="btn btn-warning col-12">Modifier</button>
         {{ form_end(form_edit) }}

@@ -26,9 +26,10 @@
                 <td>{{auto.modele}}</td>
                 <td>{{auto.puissance}} ch</td>
                 <td>{{auto.prix | format_currency('EUR')}}</td>
-                <td><img src="{{ asset('' ~ auto.image)}}" alt="" /></td>
+                <td><img src="{{ asset('images/' ~ auto.image)}}" alt="" /></td>
                 <td>
                     <a href="{{path('auto_item',{id:auto.id})}}" class="btn btn-info"><i class="fas fa-pen"></i> Détail</a>
+                    <a href="{{path('auto_edit',{id:auto.id})}}" class="btn btn-warning"><i class="fas fa-check"></i> Edit</a>
                     <a onclick="return confirm('Etes-vous sûr de supprimer')" 
                         href="{{ path('auto_delete', {id: auto.id})}}" class="btn btn-danger">
                         <i class="fas fa-trash"> Delete</i>
