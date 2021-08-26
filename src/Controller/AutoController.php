@@ -41,7 +41,7 @@ class AutoController extends AbstractController
      */
     public function index(PaginatorInterface $paginator, Request $request): Response
     {
-        
+        dd($request->get('search'));
         $repo = $this->getDoctrine()->getRepository(Auto::class);
         $cars = $repo->findBy(['puissance'=>428],['id'=>'DESC']);
         $this->session->set('cars',$cars);
@@ -54,6 +54,14 @@ class AutoController extends AbstractController
         return $this->render('auto/index.html.twig', [
             'autos' => $autosPagination,
         ]);
+    }
+
+    /**
+     * @Route("/cars-exp", name="cars_exp")
+     */
+    public function expensiveAutos(AutoRepository $repo){
+        $carsExp = $repo->findAllGreaterThanPrice3(90000);
+        dd($carsExp);
     }
 
     /**
@@ -271,37 +279,30 @@ class AutoController extends AbstractController
     public function sendMail(Request $request, MailerInterface $mailer){
         $form_contact = $this->createForm(ContactType::class);
         $form_contact->handleRequest($request);
-
-        if ($form_contact->isSubmitted() && $form_contact->isValid()) {
+        if($form_contact->isSubmitted() && $form_contact->isValid()){
             $contact = $form_contact->getData();
-            //dd($contact['email']);
-            $email = (new TemplatedEmail())
-            ->from('dwwm94@gmail.com')
-            ->to($contact['email'])
-            ->subject($contact['subject'])
+            //dd($contact);
 
-            // path of the Twig template to render
-            ->htmlTemplate('emails/message.html.twig')
-
-            // pass variables (name => value) to the template
-            ->context([
-                'expiration_date' => new \DateTime('+7 days'),
-                'username' => 'foo',
-                'subject'=>$contact['subject'],
-                'message'=>$contact['message']
-            ]);
-            $mailer->send($email);
-            return $this->redirectToRoute('success_message');
+            $email = ( new TemplatedEmail())
+                    ->from($contact['email'])
+                    ->to('dwwm94@gmail.com')
+                    ->subject($contact['subject'])
+                    ->htmlTemplate('emails/message.html.twig')
+                    ->context([
+                        'contact'=>$contact
+                    ]);
+                    $mailer->send($email);
+                    return $this->redirectToRoute('confirm_email');
         }
         return $this->render('auto/contact.html.twig',[
             'formContact'=>$form_contact->createView()
         ]);
     }
+
     /**
-     * @Route("/success-message", name="success_message")
-     *
+     * @Route("confirm-email", name="confirm_email")
      */
     public function confirmation(){
-        return new Response('Confirmation');
+        return $this->render('emails/confirmation,.html.twig');
     }
 }

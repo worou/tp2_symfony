@@ -2,13 +2,24 @@
 
 {% form_theme formContact 'bootstrap_5_layout.html.twig' %}
 {% block body %}
-    <div class="col-6">
-    {# {{ dump(cars) }} #}
-        <h1>Formulaire d'ajout</h1>
-        {{ form_start(formContact, {'attr' : {'novalidate':'novalidate'}}) }}
-        {{ form_widget(formContact) }}
-        <button type="submit" class="btn btn-primary col-12">Envoyer</div>
-        {{ form_end(formContact) }}
+    <div class="d-flex">
+            <div class="col-6">
+            {# {{ dump(cars) }} #}
+                <h1>Formulaire d'ajout</h1>
+                {{ form_start(formContact, {'attr' : {'novalidate':'novalidate'}}) }}
+                {{ form_row(formContact.name, {'label':'Nom', 'attr':{'placeholder':'Entrez votre nom svp!'}}) }}
+                {{ form_row(formContact.email, {'label':'Email adresse', 'attr':{'placeholder':'Entrez votre adresse mail svp!'}}) }}
+                {{ form_row(formContact.subject, {'label':'Objet', 'attr':{'placeholder':'Entrez l\'objet de votree demande  svp!'}}) }}
+                {{ form_row(formContact.message, { 'attr':{'placeholder':'Entrez votre message svp!'}}) }}
+                <button type="submit" class="btn btn-primary col-12">Envoyer</div>
+                {{ form_end(formContact) }}
+            </div>
+            <div class="col-6">
+                <h2>S.A.S VJJHG</h2>
+                <p>Email: vjj@tt.fr</p>  
+                <p>Rue: 09 Rue Marc Seguin</p>
+                <p>Code: 94015</p> 
+                <p>Ville: Créteil</p>  
+            </div>
     </div>
-    <div class="col-6"></div>
 {%  endblock %}

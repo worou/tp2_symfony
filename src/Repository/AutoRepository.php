@@ -47,4 +47,39 @@ class AutoRepository extends ServiceEntityRepository
         ;
     }
     */
+    //queryBuilder
+    public function findAllGreaterThanPrice($price):array
+    {
+        return $this->createQueryBuilder('a')
+                    ->andWhere('a.prix > :p') 
+                    ->setParameter('p',$price)
+                    ->orderBy('a.prix','DESC')
+                    ->getQuery()
+                    ->getResult();
+    }
+    //Dql
+    public function findAllGreaterThanPrice2($price):array
+    {
+        $em = $this->getEntityManager();
+        $q = $em->createQuery(
+            'SELECT a
+            FROM App\Entity\Auto a
+            WHERE a.prix > :p'
+        )->setParameter('p',$price);
+
+        return $q->getResult();
+        
+    }
+    //Sql
+    public function findAllGreaterThanPrice3($price):array
+    {
+        $db = $this->getEntityManager()->getConnection();
+        $req = '
+            SELECT * FROM Auto a
+            WHERE a.prix > :p
+        ';
+        $result = $db->prepare($req);
+        $result->execute(['p'=>$price]);
+        return $result->fetchAllAssociative();
+    }
 }

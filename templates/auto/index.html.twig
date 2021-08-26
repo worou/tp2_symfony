@@ -7,6 +7,7 @@
 {{ dump(app.session.get('cars')) }} #}
 
     <h1>Liste des voitures</h1>
+    <div class="d-flex justify-content-end">{% include 'auto/search.html.twig' %}</div>
     <table class="table table-striped">
         <thead>
             <tr>
