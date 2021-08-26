@@ -2,7 +2,8 @@
 {% form_theme form_car 'bootstrap_5_layout.html.twig' %}
 {% block body %}
     <div class="col-4 offset-4">
+    {# {{ dump(cars) }} #}
         <h1>Formulaire d'ajout</h1>
-        {{ form(form_car) }}
+        {{ form(form_car, {'attr' : {'novalidate':'novalidate'}}) }}
     </div>
 {%  endblock %}
