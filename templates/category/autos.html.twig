@@ -3,10 +3,8 @@
 {% block title %}Auto{% endblock %}
 
 {% block body %}
-
-{# {{ dump(app.session.get('category')) }}  #}
-
-    <h1>Liste des voitures</h1>
+ 
+    <h1>Liste des voiture par catégorie</h1>
     <div class="d-flex justify-content-between">
         <p></p>
         <p>{% include 'auto/search.html.twig' %}</p>
@@ -21,7 +19,6 @@
                 <th>Puissance</th>
                 <th>Prix</th>
                 <th>Image</th>
-                <th>Catégorie</th>
                 <th>Description</th>
                 <th class="text-center">Actions</th>
             </tr>
@@ -35,7 +32,7 @@
                 <td>{{auto.puissance}} ch</td>
                 <td>{{auto.prix | format_currency('EUR')}}</td>
                 <td><img src="{{ asset('images/' ~ auto.image)}}" alt="" width="100vw"/></td>
-                 <td>{{auto.category.name}}</td>
+
                 <td>{{auto.description | u.truncate(10, '...', false)}}</td>
                 <td>
                     <a href="{{path('auto_item',{id:auto.id})}}" class="btn btn-info"><i class="fas fa-pen"></i> Détail</a>

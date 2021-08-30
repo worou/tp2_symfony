@@ -53,7 +53,7 @@ class Auto
      * @Assert\NotBlank(
      * message = "Le champ '{{ label }}' n'est pas {{ value }}!")
      * * @Assert\LessThan(
-     *     value = 100
+     *     value = 1000000
      * )
      */
     private $prix;
@@ -63,7 +63,7 @@ class Auto
      * @Assert\NotBlank(
      * message = "Le champ '{{ label }}' n'est pas {{ value }}!")
      * @Assert\Regex(
-     *     pattern="/^[a-z]{2,5}$/",
+     *     pattern="/^[a-zA-Z]{2,6}$/",
      *     match=true,
      *     message="Ce champ doit contenir de 2 à 5 caractères")
      */
@@ -78,6 +78,12 @@ class Auto
      * @ORM\Column(type="text", nullable=true)
      */
     private $description;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="autos")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $category;
 
     public function getId(): ?int
     {
@@ -164,6 +170,18 @@ class Auto
     public function setDescription(?string $description): self
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?Category $category): self
+    {
+        $this->category = $category;
 
         return $this;
     }

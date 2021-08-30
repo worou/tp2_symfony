@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Auto;
 use App\Form\AutoType;
+use App\Entity\Category;
 use App\Form\ContactType;
 use App\Service\AutoService;
 use Symfony\Component\Mime\Email;
@@ -17,6 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -41,11 +43,17 @@ class AutoController extends AbstractController
      */
     public function index(PaginatorInterface $paginator, Request $request): Response
     {
-        dd($request->get('search'));
         $repo = $this->getDoctrine()->getRepository(Auto::class);
         $cars = $repo->findBy(['puissance'=>428],['id'=>'DESC']);
         $this->session->set('cars',$cars);
-        $autosData = $repo->findAll();
+
+        $search = $request->get('search');
+        if($search){
+            $autosData = $repo->searchAuto($search);
+        }else{
+
+            $autosData = $repo->findAll();
+        }
         $autosPagination = $paginator->paginate(
             $autosData,
             $request->query->getInt('page',1)//le numero de la page par défaut
@@ -147,6 +155,12 @@ class AutoController extends AbstractController
                           ->add('pays',TextType::class,[
                             'label'=>'Pays d\'origine',
                             'attr'=>['placeholder'=>'Entrez le pays svp..']])
+                          ->add('category', EntityType::class,[
+                              'label'=>'Catégorie',
+                              'class'=>Category::class,
+                              'placeholder' => 'Choisissez une catégorie',
+                              'choice_label'=>'name'
+                          ])
                           ->add('Soumettre', SubmitType::class,['attr'=>['class'=>'col-12 btn btn-success']])
                           ->getForm();
         $form_auto->handleRequest($request);

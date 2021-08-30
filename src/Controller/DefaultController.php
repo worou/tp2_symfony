@@ -1,16 +1,23 @@
 <?php
 namespace App\Controller;
 
-use Symfony\Component\Routing\Annotation\Route;
+use App\Repository\CategoryRepository;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-class DefaultController{
+class DefaultController extends AbstractController{
 
     /**
      * @Route("/", name="home")
      */
-    public function index(){
-        return new Response("<h1>Hello world!</h1>");
+    public function index(CategoryRepository $repo, SessionInterface $session){
+        $categories = $repo->findAll();
+        $session->set('category', $categories);
+        //dd($session->get('category'));
+        //return new Response("<h1>Hello world!</h1>");
+        return $this->render('pages/index.html.twig');
     }
 
      /**

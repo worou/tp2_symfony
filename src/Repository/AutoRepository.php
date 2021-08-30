@@ -82,4 +82,18 @@ class AutoRepository extends ServiceEntityRepository
         $result->execute(['p'=>$price]);
         return $result->fetchAllAssociative();
     }
+
+    public function searchAuto(?string $search){
+  
+            $qb =  $this->createQueryBuilder('a')
+            ->where('a.marque LIKE :search OR a.modele LIKE :search')
+            ->setParameter('search', '%'.$search.'%')
+            ->orderBy('a.prix', 'ASC');
+
+
+             $query = $qb->getQuery();
+
+            return $query->execute();
+    }
+
 }
