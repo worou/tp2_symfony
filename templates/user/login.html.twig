@@ -1,10 +1,16 @@
 {% extends 'base.html.twig'%}
 {% block body %}
+{% if error %}
+<div class="alert-danger text-center">
+
+    <strong>{{ error.messageKey|trans(error.messageData, 'security') }}</strong>
+</div>
+{% endif %}
 <h1>Formulaire de connexion</h1>
     <form method="post" action="{{path('login')}}">
         <div>
-            <label>Login</label>
-            <input type="text" name="_username" class="form-control" placeholder="Entrez votre login"/>
+            <label>Email adresse</label>
+            <input type="email" name="_username" class="form-control" value="{{ last_username }}" placeholder="Entrez votre Email adresse"/>
         </div>
         <div>
             <label>Password</label>

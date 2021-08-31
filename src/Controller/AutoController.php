@@ -27,6 +27,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class AutoController extends AbstractController
@@ -63,74 +64,12 @@ class AutoController extends AbstractController
             'autos' => $autosPagination,
         ]);
     }
-
-    /**
-     * @Route("/cars-exp", name="cars_exp")
-     */
-    public function expensiveAutos(AutoRepository $repo){
-        $carsExp = $repo->findAllGreaterThanPrice3(90000);
-        dd($carsExp);
-    }
-
-    /**
-     * @Route("/auto/{id}", name="auto_item")
-     */
-    // public function getAuto(int $id){
-        
-    //     $repo = $this->getDoctrine()->getRepository(Auto::class);
-    //     $auto = $repo->find($id);
-       
-    //     return $this->render('auto/detail.html.twig', ['auto'=>$auto]);
-    // }
-
-    
-    /**
-     * @Route("/auto/{id}", name="auto_item")
-     */
-    // public function getAuto(AutoRepository $repo, $id){
-
-    //     $auto = $repo->find($id);
-
-    //     return $this->render('auto/detail.html.twig', ['auto'=>$auto]);
-    // }
-
-    /**
-     * @Route("/auto/{id}", name="auto_item")
-     */
-    public function getAuto(Auto $auto){
-        
-        return $this->render('auto/detail.html.twig', ['auto'=>$auto]);
-    }
-
-    /**
-     * @Route("/new", name="auto_new")
-     */
-    public function create(Request $request){
-        
-        if($request->request->get('marque')){
-            //dd($request->get('marque'));
-            $em = $this->getDoctrine()->getManager();
-
-            $auto = new Auto();
-            $auto->setMarque($request->get('marque'));
-            $auto->setModele($request->get('modele'));
-            $auto->setPuissance($request->get('puissance'));
-            $auto->setPrix(100000);
-            $auto->setPays($request->get('pays'));
-            $auto->setImage($request->get('image'));
-
-            $em->persist($auto);
-            $em->flush();
-
-            return $this->redirectToRoute("auto");
-        }
-        return $this->render('auto/add.html.twig');
-    }
-
-    /**
+     /**
+     * @IsGranted("ROLE_ADMIN")
      * @Route("/add", name="add_auto")
      */
     public function addForm(Request $request, EntityManagerInterface $em){
+        //$this->denyAccessUnlessGranted('ROLE_ADMIN');
         $cars = $this->session->get('cars');
         $auto = new Auto();
         $form_auto = $this->createFormBuilder($auto)
@@ -264,6 +203,71 @@ class AutoController extends AbstractController
         $this->addFlash('success', 'Voiture N° '.$auto->getId().' a été supprimée avec succès...');
         return $this->redirectToRoute("auto");  
       }
+
+    /**
+     * @Route("/cars-exp", name="cars_exp")
+     */
+    public function expensiveAutos(AutoRepository $repo){
+        $carsExp = $repo->findAllGreaterThanPrice3(90000);
+        dd($carsExp);
+    }
+
+    /**
+     * @Route("/auto/{id}", name="auto_item")
+     */
+    // public function getAuto(int $id){
+        
+    //     $repo = $this->getDoctrine()->getRepository(Auto::class);
+    //     $auto = $repo->find($id);
+       
+    //     return $this->render('auto/detail.html.twig', ['auto'=>$auto]);
+    // }
+
+    
+    /**
+     * @Route("/auto/{id}", name="auto_item")
+     */
+    // public function getAuto(AutoRepository $repo, $id){
+
+    //     $auto = $repo->find($id);
+
+    //     return $this->render('auto/detail.html.twig', ['auto'=>$auto]);
+    // }
+
+    /**
+     * @Route("/auto/{id}", name="auto_item")
+     */
+    public function getAuto(AutoRepository $repo, $id){
+        $auto = $repo->find($id);
+        return $this->render('auto/detail.html.twig', ['auto'=>$auto]);
+    }
+
+    /**
+     * @Route("/new", name="auto_new")
+     */
+    public function create(Request $request){
+        
+        if($request->request->get('marque')){
+            //dd($request->get('marque'));
+            $em = $this->getDoctrine()->getManager();
+
+            $auto = new Auto();
+            $auto->setMarque($request->get('marque'));
+            $auto->setModele($request->get('modele'));
+            $auto->setPuissance($request->get('puissance'));
+            $auto->setPrix(100000);
+            $auto->setPays($request->get('pays'));
+            $auto->setImage($request->get('image'));
+
+            $em->persist($auto);
+            $em->flush();
+
+            return $this->redirectToRoute("auto");
+        }
+        return $this->render('auto/add.html.twig');
+    }
+
+   
 
     /**
      * @Route("/email-contact", name="email_contact")

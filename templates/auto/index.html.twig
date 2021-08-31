@@ -10,7 +10,9 @@
     <div class="d-flex justify-content-between">
         <p></p>
         <p>{% include 'auto/search.html.twig' %}</p>
+        {% if is_granted('ROLE_ADMIN') %}
         <p><a href="{{ path('add_auto')}}" class="btn btn-warning"/><i class="fa fa-plus"></i> Ajouter</a></p>
+        {% endif %}
     </div>
     <table class="table table-striped">
         <thead>
